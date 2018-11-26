@@ -30,7 +30,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Toolkit IA'
+      title: 'kit IA'
     }
   },
   name: 'App',
