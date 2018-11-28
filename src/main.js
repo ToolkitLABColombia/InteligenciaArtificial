@@ -6,9 +6,13 @@ import router from './router'
 import Vuetify from 'vuetify'
 import store from './store/index'
 import 'vuetify/dist/vuetify.min.css'
+import icon from '@/assets/noun_brainstorming.svg'
 // import colors from 'vuetify/es5/util/colors'
 
 const tema = {
+  icon: {
+    ej: icon
+  },
   theme: {
     primary: '#CA0E67',
     secondary: '#FFFD38',

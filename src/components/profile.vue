@@ -5,10 +5,15 @@
 			<v-layout row wrap>
 		    <v-flex xs12 sm8 md8 offset-sm2>
 		      <v-card>
+            <!-- <v-icon color="accent">ej</v-icon> -->
+            <!-- <v-avatar size="32px" color="">
+              <v-img :aspect-ratio="16/9" :src="icon"/>
+            </v-avatar> -->
 						<v-hover>
-							<v-card slot-scope="{ hover }">
-								<v-btn fab right absolute top flat color="transparent" class="pa-5 mr-5 mt-4">
+							<v-card slot-scope="{ hover }" @click="loadImg">
+								<v-btn fab right absolute top flat color="transparent" class="pa-5 mr-5 mt-5">
 									<v-avatar size="120px">
+                    <input type="file" style="display: none" @change="updatingImg" ref="loadImg">
 										<img :aspect-ratio="16/9" src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460" alt="Avatar">
 										<v-icon color="accent"></v-icon>
 									</v-avatar>
@@ -69,12 +74,19 @@
 
 <script>
 import toolbar from '@/components/toolBar'
-// agregé esta linea en profile para probar el repositorio colaborativo
+import fondo from '@/assets/Fondo3.png'
+import icon from '@/assets/noun_brainstorming.svg'
+
 export default {
   name: 'profile',
   data: () => ({
     hover: true,
+    fondo,
+    icon,
     show: false,
+    img: null,
+    file: null,
+    blob: null,
     emailRules: [
       v => !!v || 'Se necesita una cuenta de correo electrónico',
       v => /.+@.+/.test(v) || 'Correo electrónico invalido'
@@ -86,6 +98,23 @@ export default {
       if (deleteCognitiveModel === true) {
         console.log('deleting cognitive model')
       }
+    },
+    loadImg () {
+      this.$refs.loadImg.click()
+    },
+    updatingImg (event) {
+      let files = event.target.files
+      // this.file = event.target.files[0]
+      // // console.log(this.file)
+      // this.blob = new Blob([this.file], { type: 'image/jpeg' })
+      let fileReader = new FileReader()
+      let imgR
+      fileReader.addEventListener('load', () => {
+        this.file = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      imgR = files[0]
+      console.log(imgR, this.file)
     }
   },
   components: { toolbar }

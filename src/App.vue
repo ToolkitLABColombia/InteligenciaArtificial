@@ -10,6 +10,7 @@
 <script>
 import logoToolkit from '@/assets/logoToolkit.svg'
 import footerToolkit from '@/components/footer'
+import './stylus/main.styl'
 
 export default {
   data () {

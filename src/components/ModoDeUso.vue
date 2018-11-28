@@ -1,8 +1,8 @@
 <template>
   <div>
     <toolbar/>
-    <v-container grid-list-md>
-      <v-layout row align-center fill-height>
+    <v-container grid-list-md fill-height>
+      <v-layout row align-center>
         <v-flex xs12 md6 v-for="(mode, index) in this.$store.state.app.application.modes" :key="index" offset-md0>
           <!-- <v-flex row>
             <v-avatar slot="activator" size="200px">

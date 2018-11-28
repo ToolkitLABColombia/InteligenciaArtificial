@@ -1,42 +1,34 @@
 <template>
-  <div>
+  <v-jumbotron height="100%" :src="fondo">
     <toolbar/>
     <v-container grid-list-md text-xs-center>
-      <v-layout row wrap>
-        <v-img :src="fondo"></v-img>
-      </v-layout>
+      <!-- <v-img :src="fondo"></v-img> -->
       <v-layout row>
         <v-flex xs12 sm12 md12 class="centrado">
           <!-- <v-avatar :size="35">
           <v-img :src="logoToolkit" alt="Logo de Toolkit IA"></v-img>
         </v-avatar> -->
-        <v-btn to="/modoDeUso" color="black" class="accent--text">Iniciar</v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center justify-center>
-      <v-flex d-flex xs6 sm6 md12 column>
-        <p class="text-xs-center">
-          <span>Contáctenos:</span><br/>
-          <a href="mailto:centrodeinnovacion@mintic.gov.co">centrodeinnovacion@mintic.gov.co</a><br/>
-          <a href="mailto:carina@correo.unicordoba.edu.co">carina@correo.unicordoba.edu.co</a>
-        </p>
-      </v-flex>
-      <v-flex d-flex xs6 sm6 md12 column>
-        <p class="text-xs-center">
-          <span>Sobre ToolKits:</span><br/>
-          <router-link to="/quienesSomos">¿Quiénes somos?</router-link><br/>
-          <a href="http://centrodeinnovacion.gov.co">centrodeinnovacion.gov.co</a><br/>
-          <a href="http://cien.net.co">cien.net.co</a>
-        </p>
+        <div class="pt-5">
+          <v-img :src="titulo" aspect-ratio="15" contain></v-img>
+        </div>
+          <div class="centrado ma-5" width="200px">
+            <p class="white--text text-md-center" style="font-size: 18px">El kit de esta tecnología te permitirá aprovechar las capacidades de aprendizaje de tu ordenador, para facilitar tu trabajo. Deberás enseñar a realizar las tareas y a entender la información, como una persona lo haría :)</p>
+          </div>
+        <v-btn outline to="/modoDeUso" color="accent" style="font-size: 18px">Empezar</v-btn>
+        <div class="mt-5">
+          <a href="https://google.com"><v-img :src="enlace" aspect-ratio="15" contain></v-img></a>
+        </div>
       </v-flex>
     </v-layout>
   </v-container>
-</div>
+</v-jumbotron>
 </template>
 
 <script>
 import logoToolkit from '@/assets/logoToolkit.svg'
-import fondo from '@/assets/Fondo2.png'
+import fondo from '@/assets/fondoportada2.jpg'
+import enlace from '@/assets/logoToolkitCompleto.png'
+import titulo from '@/assets/titulo.jpg'
 import toolbar from '@/components/toolBar'
 
 export default {
@@ -44,7 +36,9 @@ export default {
   data () {
     return {
       logoToolkit,
-      fondo
+      fondo,
+      enlace,
+      titulo
     }
   },
   components: { toolbar }
@@ -56,5 +50,12 @@ export default {
 <style scoped>
 .centrado {
   text-align: center;
+}
+.fondo {
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/fondoportada.jpg');
+	-webkit-background-size: cover;
+	background-size: cover
 }
 </style>
