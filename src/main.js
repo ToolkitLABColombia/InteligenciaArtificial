@@ -7,7 +7,11 @@ import Vuetify from 'vuetify'
 import store from './store/index'
 import 'vuetify/dist/vuetify.min.css'
 import icon from '@/assets/noun_brainstorming.svg'
-// import colors from 'vuetify/es5/util/colors'
+import VueFire from 'vuefire'
+import firebase from 'firebase/app'
+import 'firebase/storage'
+import 'firebase/auth'
+import 'firebase/firestore'
 
 const tema = {
   icon: {
@@ -28,6 +32,16 @@ const tema = {
 }
 
 Vue.use(Vuetify, tema)
+Vue.use(VueFire)
+
+const config = {
+  apiKey: 'AIzaSyALVtR9gL-zpCvxC-aowWFWcDqW71eHsEw',
+  authDomain: 'toolkit-1556a.firebaseapp.com',
+  databaseURL: 'https://toolkit-1556a.firebaseio.com',
+  projectId: 'toolkit-1556a',
+  storageBucket: 'toolkit-1556a.appspot.com',
+  messagingSenderId: '146062994371'
+}
 
 Vue.config.productionTip = false
 
@@ -39,3 +53,11 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+const firebaseApp = firebase.initializeApp(config)
+const db = firebaseApp.firestore()
+const auth = firebaseApp.auth()
+db.settings({timestampsInSnapshots: true})
+const storage = firebase.storage()
+
+export {db, auth, storage}

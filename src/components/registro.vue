@@ -4,32 +4,25 @@
 		<v-container grid-list-md text-xs-center>
 			<v-layout justify-center>
 				<v-flex xs12 sm6 md6>
-					<!-- <v-card> -->
 					<v-card-title class="gray">
 						<span class="headline black--text">Registrarme</span>
 					</v-card-title>
 					<v-form ref="form" v-model="valid" lazy-validation>
 						<v-flex xs12 sm10 md10>
-							<v-text-field label="Correo Electrónico" :rules="emailRules" required ></v-text-field>
+							<v-text-field label="Correo Electrónico" v-model="$store.state.app.application.user.email" :rules="emailRules" required ></v-text-field>
 						</v-flex>
 						<v-flex xs12 sm10 md10>
-							<v-text-field label="Usuario" :rules="usuarioRules" required ></v-text-field>
+							<v-text-field :type="'password'" v-model="$store.state.app.application.user.password" :rules="passwordRules" label="Contraseña" required ></v-text-field>
 						</v-flex>
 						<v-flex xs12 sm10 md10>
-							<v-text-field :type="'password'" :rules="passwordRules" label="Contraseña" required ></v-text-field>
+							<v-text-field label="Entidad" v-model="$store.state.app.application.user.entity" :rules="usuarioRules" required ></v-text-field>
 						</v-flex>
 						<v-flex xs12 sm10 md10>
-							<v-select
-							:items="roles"
-							:rules="[v => !!v || 'Item is required']"
-							label="Rol"
-							required
-							></v-select>
+							<v-text-field label="Localización" v-model="$store.state.app.application.user.location" :rules="usuarioRules" required ></v-text-field>
 						</v-flex>
-						<v-btn :disabled="!valid" @click="">Registrarme</v-btn>
+						<v-btn :disabled="!valid" @click="registerme">Registrarme</v-btn>
 						<v-btn @click="clear">Limpiar Datos</v-btn>
 					</v-form>
-					<!-- </v-card> -->
 				</v-flex>
 			</v-layout>
 		</v-container>
@@ -38,6 +31,8 @@
 
 <script>
 import toolbar from '@/components/toolBar'
+import { db } from '../main'
+
 export default {
   name: 'Registro',
   data () {
@@ -55,6 +50,22 @@ export default {
   methods: {
     clear () {
       this.$refs.form.reset()
+    },
+    registerme () {
+      db.collection('users').add(this.$store.state.app.application.user)
+      .then((docRef) => {
+        // console.log('Document written with ID: ', docRef.id, docRef)
+        try {
+          this.$store.dispatch('app/auth', docRef.id)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.$router.push('/')
+        }
+      })
+      .catch((error) => {
+        console.error('Error adding document: ', error)
+      })
     }
   },
   components: { toolbar }

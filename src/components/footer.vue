@@ -1,7 +1,7 @@
 <template>
-	<v-footer dark height="auto">
+	<v-footer height="auto">
     <v-card class="flex" flat tile>
-			<v-card-actions class="grey darken-3 justify-center">
+			<v-card-actions class="black darken-3 justify-center">
 					<router-link to="/quienesSomos"><a class="white--text">Quienes Somos?</a></router-link>
 					<v-spacer></v-spacer>
 					<router-link to="/quienesSomos"><a class="white--text">Contáctenos</a></router-link>

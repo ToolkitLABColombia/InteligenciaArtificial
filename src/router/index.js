@@ -9,6 +9,7 @@ import Registro from '@/components/registro'
 import Profile from '@/components/profile'
 import PrepararDatos from '@/components/PrepararDatos'
 import DefinirModelo from '@/components/definirModelo'
+import steps from '@/components/steps'
 
 Vue.use(Router)
 
@@ -46,9 +47,9 @@ export default new Router({
       component: Profile
     },
     {
-      path: '/lineaDeTiempo',
-      name: 'LineaDeTiempo',
-      component: LineaDeTiempo
+      path: '/demo',
+      name: 'Demo',
+      component: steps
     },
     { path: '/UsingIA',
       component: LineaDeTiempo,

@@ -19,6 +19,7 @@ export default {
       sideNav: false,
       drawer: true,
       logo: logoToolkit,
+      socket: null,
       items: [{
         icon: 'bubble_chart',
         title: 'Inspire'

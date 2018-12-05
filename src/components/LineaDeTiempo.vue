@@ -18,13 +18,13 @@
         </v-timeline>
       </v-card>
     </v-flex>
-    <v-flex xs6 sm6 md7>
+    <v-flex xs6 sm6 md8>
       <router-view/>
       <router-view name="PrepararDatos"/>
     </v-flex>
-    <v-flex sm2 md2 class="hidden-xs-only">
+    <!-- <v-flex sm2 md2 class="hidden-xs-only">
       y aca otra
-    </v-flex>
+    </v-flex> -->
   </v-layout>
 </template>
 
@@ -32,7 +32,7 @@
 import toolbar from '@/components/toolBar'
 export default {
   data: () => ({
-    init: 'cargar'
+    init: 'C'
   }),
   computed: {
     steps () {

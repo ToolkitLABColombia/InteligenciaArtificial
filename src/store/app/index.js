@@ -1,20 +1,24 @@
-import logoDemo from '../../assets/entrenar.svg'
+import user from '../../assets/noun_User.svg'
+import manager from '../../assets/noun_manager.svg'
+import { db } from '../../main'
+
 const state = {
   application: {
     user: {
-      name: '',
+      photo: 'https://firebasestorage.googleapis.com/v0/b/toolkit-1556a.appspot.com/o/sin_perfil.png?alt=media&token=58e7bbb1-2233-48c9-a301-0f0a1d2b422a',
       email: '',
       password: '',
       entity: '',
       location: '',
+      carinaToken: '',
       token: '',
-      sokedId: '',
-      authenticated: true,
       cms: [
         {name: 'modelo cognitivo ejemplo 1'},
         {name: 'modelo cognitivo ejemplo 2'}
       ]
     },
+    socketId: '',
+    authenticated: false,
     toolBarItems: [
       { icon: 'exit_to_app', title: 'Ingresar', link: '/login' },
       { icon: 'how_to_reg', title: 'Registro', link: '/registro' },
@@ -22,7 +26,7 @@ const state = {
     ],
     usingCM: {
       steps: {
-        cargar: {
+        C: {
           active: 'accent',
           icon: 'data_usage',
           data: [
@@ -31,7 +35,7 @@ const state = {
             { icon: 'account_circle', text: 'Enviale tus datos a Carina', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/DefinirModelo' }
           ]
         },
-        entrenar: {
+        E: {
           active: 'disable',
           icon: 'swap_horizontal_circle',
           data: [
@@ -43,7 +47,7 @@ const state = {
             { icon: 'linear_scale', text: 'Modelo Entrenado', active: 'disable', color: 'secondary', shadow: '#FFFD38', to: '/UsingIA/PrepararDatos' }
           ]
         },
-        probar: {
+        P: {
           active: 'disable',
           icon: 'play_for_work',
           data: [
@@ -56,8 +60,34 @@ const state = {
       }
     },
     modes: [
-      { text: 'No tienes información y tienes poco tiempo?', textButton: 'DEMO', to: '', img: logoDemo },
-      { text: 'Quieres volver a ingresar y seguir probando?', textButton: 'DIY', to: '', img: '' }
+      { text: 'No tienes información y tienes poco tiempo?', textButton: 'DEMO', to: '', img: user },
+      { text: 'Quieres volver a ingresar y seguir probando?', textButton: 'DIY', to: '', img: manager }
+    ],
+    csv: [
+      {
+        'Fecha': '10/02/2018',
+        'Petición': 'por favor me pueden informar cuando es la fecha de cierre convocatoria de los proyectos de investigación',
+        'Respuesta': 'La fecha de cierre es el 5 de diciembre de 2018',
+        'Secretaría o Dependencia': '-'
+      },
+      {
+        'Fecha': '11/02/2018',
+        'Petición': 'Necesito saber que papeles debo de tener en cuenta para presentar un proyecto de investigación',
+        'Respuesta': 'Se deben presentar los siguientes formatos diligenciados: a. Formato de proyecto de investigación y extensión: F2080 y b. Formato F2081',
+        'Secretaría o Dependencia': '-'
+      },
+      {
+        'Fecha': '10/03/2018',
+        'Petición': 'Cuál es la fecha de inicio del proyecto FE-002',
+        'Respuesta': 'La fecha de inicio del proyecto es 3 de junio de 20018',
+        'Secretaría o Dependencia': '-'
+      },
+      {
+        'Fecha': '10/03/2018',
+        'Petición': 'Quien es el encargado de recepcionar los proyectos de extensión',
+        'Respuesta': 'Maria Perez es la persona encargada de recepcionar los proyectos de extensión',
+        'Secretaría o Dependencia': '-'
+      }
     ]
   },
   contexto: {
@@ -107,6 +137,35 @@ const mutations = {
   },
   addPalabraClave: (state, word) => {
     state.contexto.palabrasClave.push(word)
+  },
+  changePhoto: (state, photo) => {
+    state.application.user.photo = photo
+  },
+  asignSocketId: (state, socketId) => {
+    state.application.socketId = socketId
+  },
+  carinaToken: (state, token) => {
+    state.application.user.carinaToken = token
+  }
+}
+
+const actions = {
+  auth (context, token) {
+    context.state.application.authenticated = true
+    context.state.application.user.carinaToken = token
+    context.state.application.user.token = token
+  },
+  login (context, user) {
+    state.application.user = user.data
+    context.dispatch('auth', user.id)
+  },
+  updatePhoto (context, upload) {
+    upload.getDownloadURL().then(url => {
+      context.commit('changePhoto', url)
+      db.collection('users').doc(context.state.application.user.token).update({
+        photo: url
+      })
+    })
   }
 }
 
@@ -114,6 +173,6 @@ export default {
   namespaced: true,
   state,
   getters,
-  mutations
-  // actions
+  mutations,
+  actions
 }

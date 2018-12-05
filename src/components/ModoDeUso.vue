@@ -3,12 +3,12 @@
     <toolbar/>
     <v-container grid-list-md fill-height>
       <v-layout row align-center>
-        <v-flex xs12 md6 v-for="(mode, index) in this.$store.state.app.application.modes" :key="index" offset-md0>
-          <!-- <v-flex row>
+        <v-flex xs6 md6 v-for="(mode, index) in this.$store.state.app.application.modes" :key="index" offset-md0>
+          <v-flex row class="text-xs-center">
             <v-avatar slot="activator" size="200px">
               <img :src="mode.img">
             </v-avatar>
-          </v-flex> -->
+          </v-flex>
           <v-flex row>
             <span style="font-size: 24px">{{mode.text}}</span>
           </v-flex>
@@ -16,7 +16,7 @@
             <router-link to=""><a class="error--text" style="font-style: italic; font-size: 24px">Haz click aqui</a></router-link to="">
           </v-flex>
           <v-flex row>
-            <v-btn block large outline color="black" style="font-size: 28px">{{mode.textButton}}</v-btn>
+            <v-btn block to="/demo" large outline color="black" style="font-size: 28px">{{mode.textButton}}</v-btn>
           </v-flex>
         </v-flex>
       </v-layout>

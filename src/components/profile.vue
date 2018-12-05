@@ -4,68 +4,23 @@
 		<v-container>
 			<v-layout row wrap>
 		    <v-flex xs12 sm8 md8 offset-sm2>
-		      <v-card>
-            <!-- <v-icon color="accent">ej</v-icon> -->
-            <!-- <v-avatar size="32px" color="">
-              <v-img :aspect-ratio="16/9" :src="icon"/>
-            </v-avatar> -->
-						<v-hover>
-							<v-card slot-scope="{ hover }" @click="loadImg">
-								<v-btn fab right absolute top flat color="transparent" class="pa-5 mr-5 mt-5">
-									<v-avatar size="120px">
-                    <input type="file" style="display: none" @change="updatingImg" ref="loadImg">
-										<img :aspect-ratio="16/9" src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460" alt="Avatar">
-										<v-icon color="accent"></v-icon>
-									</v-avatar>
-								</v-btn>
-								<v-img src="https://cdn.vuetifyjs.com/images/cards/desert.jpg" aspect-ratio="2.75">
-									<v-expand-transition>
-					          <div v-if="hover" class="pa-2 transition-fast-in-fast-out grey darken-3 v-card--reveal white--text" style="height: 100%;">
-					            <div style="font-size: 24px; font-weight: bold">Jorge Narváez</div>
-											<div style="font-size: 14px; font-weight: bold">Unicor</div>
-											<div style="font-size: 14px; font-weight: bold">Montería - Colombia</div>
-					          </div>
-				        	</v-expand-transition>
-								</v-img>
-							</v-card>
-						</v-hover>
-						<div class="headline pl-4 pt-4">Datos del Usuario</div>
-			      <v-card-text>
-							<v-card light hover style="border-color: black">
-			          <!-- Usuario-->
-			          <v-card-text>
-			            <v-text-field label="Usuario" hint="usuarioejemplo"
-			            v-model="$store.state.app.application.user.name" placeholder color="accent"
-			            :rules="[v => !!v || 'Campo requerido']"></v-text-field>
-			            <!-- correo -->
-			            <v-text-field label="Correo electrónico" v-model="$store.state.app.application.user.email"
-			            hint="correoejemplo@..." :rules="emailRules" color="accent"></v-text-field>
-			            <!-- password -->
-			            <v-text-field label="Contraseña" @keyup.enter="" :append-icon="show ? 'visibility_off' : 'visibility'" v-model="$store.state.app.application.user.password" @click:append="show = !show" :type="show ? 'text' : 'password'"
-			            placeholder color="accent" hint="text xample" :rules="[v => !!v || 'Campo requerido']"></v-text-field>
-			          </v-card-text>
-			          <v-card-actions>
-			            <v-btn block outline color="black" @click="">Guardar Cambios</v-btn>
-			          </v-card-actions>
-			        </v-card>
-			      </v-card-text>
-						<div class="headline pl-4 pt-4">Modelos Cognitivos Cargados</div>
-						<v-card-text>
-							<v-card light hover style="border-color: black">
-			          <v-card-text>
-			            <v-layout row v-for="(cm, index) in this.$store.state.app.application.user.cms" :key="index">
-										<v-flex xs7 sm7 md7>
-											<v-subheader>{{cm.name}}</v-subheader>
-										</v-flex>
-										<v-flex xs5 sm5 md5>
-											<v-btn small outline color="info">cargar</v-btn>
-											<v-btn small outline color="error" @click="deleteCM()">eliminar</v-btn>
-										</v-flex>
-			            </v-layout>
-			          </v-card-text>
-			        </v-card>
-		        </v-card-text>
-		      </v-card>
+          <viewProfile v-if="!edit"/>
+          <input type="file" style="display: none" @change="updatingImg" ref="loadImg">
+          <editProfile v-if="edit" v-on:done="done"/>
+          <v-layout v-if="!edit">
+            <v-speed-dial v-model="fab" :top="top" :bottom="bottom" :open-on-hover="hover" :transition="transition">
+              <v-btn slot="activator" v-model="fab" color="primary" dark fab>
+                <v-icon>account_circle</v-icon>
+                <v-icon>close</v-icon>
+              </v-btn>
+              <v-btn fab dark small color="accent" @click="edit = !edit, fab = !fab">
+                <v-icon>edit</v-icon>
+              </v-btn>
+              <v-btn fab dark small color="error" @click="">
+                <v-icon @click="loadImg">add_a_photo</v-icon>
+              </v-btn>
+            </v-speed-dial>
+          </v-layout>
 		    </v-flex>
 	  	</v-layout>
 		</v-container>
@@ -74,60 +29,41 @@
 
 <script>
 import toolbar from '@/components/toolBar'
-import fondo from '@/assets/Fondo3.png'
-import icon from '@/assets/noun_brainstorming.svg'
+import editProfile from '@/components/editProfile'
+import viewProfile from '@/components/viewProfile'
+import { storage } from '../main'
 
 export default {
   name: 'profile',
   data: () => ({
-    hover: true,
-    fondo,
-    icon,
-    show: false,
     img: null,
     file: null,
     blob: null,
-    emailRules: [
-      v => !!v || 'Se necesita una cuenta de correo electrónico',
-      v => /.+@.+/.test(v) || 'Correo electrónico invalido'
-    ]
+    hover: true,
+    edit: false,
+    fab: false,
+    top: false,
+    bottom: true,
+    estado: null,
+    subidaValor: 0,
+    foto: null,
+    transition: 'slide-y-reverse-transition'
   }),
   methods: {
-    deleteCM (idCM) {
-      let deleteCognitiveModel = confirm(`¿Estás seguro que desea eliminar el modelo cognitivo <nameCM>`)
-      if (deleteCognitiveModel === true) {
-        console.log('deleting cognitive model')
-      }
+    done () {
+      this.edit = !this.edit
     },
     loadImg () {
       this.$refs.loadImg.click()
     },
     updatingImg (event) {
-      let files = event.target.files
-      // this.file = event.target.files[0]
-      // // console.log(this.file)
-      // this.blob = new Blob([this.file], { type: 'image/jpeg' })
-      let fileReader = new FileReader()
-      let imgR
-      fileReader.addEventListener('load', () => {
-        this.file = fileReader.result
-      })
-      fileReader.readAsDataURL(files[0])
-      imgR = files[0]
-      console.log(imgR, this.file)
+      let file = event.target.files[0]
+      let imgR = new Blob([file], { type: 'image/jpeg' })
+      let upload = storage.ref(this.$store.state.app.application.user.email).child('photo')
+      upload.put(imgR)
+      this.$store.dispatch('app/updatePhoto', upload)
     }
   },
-  components: { toolbar }
+  components: { toolbar, editProfile, viewProfile }
 }
 </script>
-
-<style lang="css">
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: left;
-  opacity: .8;
-  position: absolute;
-  width: 100%;
-}
-</style>

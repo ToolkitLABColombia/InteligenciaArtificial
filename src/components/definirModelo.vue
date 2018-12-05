@@ -16,6 +16,7 @@
       <v-flex column xs12 sm12 md12 class="py-3">
         <v-card light hover style="border-color: black">
           <v-card-title primary-title>
+            <!-- {{$store.state.app.application.user}} -->
             <div class="headline">Datos del Modelo</div>
           </v-card-title>
           <!-- nombre del modelo -->
@@ -33,7 +34,7 @@
             <!-- <v-btn small fab dark color="warning" @click="addPalabraClave"><v-icon dark>add</v-icon></v-btn> -->
           </v-card-text>
           <v-card-actions>
-            <v-btn :disabled="enableSaveModel" block outline color="black" @click="createModel">Crear Modelo</v-btn>
+            <v-btn :disabled="enableSaveModel" block outline color="black" @click="sendData">Crear Modelo</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -44,6 +45,7 @@
 
 <script>
 import fondo from '@/assets/Fondo3.png'
+import axios from 'axios'
 
 export default {
   name: 'DefinirModelo',
@@ -62,6 +64,12 @@ export default {
       this.$store.commit('app/addPalabraClave', this.palabraClave)
       this.palabraClave = ''
       this.perH = true
+    },
+    sendData () {
+      let data = {context: this.$store.state.app.contexto, csv: this.$store.state.app.application.csv}
+      // console.log(data)
+      axios.defaults.headers.common['Authorization'] = this.$store.state.app.application.user.carinaToken
+      axios.post('http://192.168.1.10:3000/c/postCognitiveModel', data).then(response => console.log(response.data)).catch(err => console.log(err))
     }
   },
   computed: {
