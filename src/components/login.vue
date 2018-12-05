@@ -34,7 +34,7 @@ import io from 'socket.io-client'
 export default {
   name: 'login',
   mounted () {
-    this.socket = io('http://192.168.1.10:3000')
+    this.socket = io('http://172.19.0.56:3000')
     this.socket.on('clientConnect', (data) => {
       this.$store.commit('app/asignSocketId', data.idClient)
       // this.$store.commit('app/carinaToken', data.token)
@@ -43,7 +43,7 @@ export default {
       this.$store.commit('app/carinaToken', data.token)
     })
     this.socket.on('returnDataWithKeyWords', (data) => {
-      // this.$store.commit('app/carinaToken', data.token)
+      this.$store.commit('app/response', data)
       console.log(data)
     })
   },
@@ -68,7 +68,7 @@ export default {
         if (doc.docs[0]) {
           let user = doc.docs[0]
           try {
-            axios.post('http://192.168.1.10:3000/user/auth',
+            axios.post('http://172.19.0.56:3000/user/auth',
             {idUsuario: this.$store.state.app.application.user.carinaToken, idSocket: this.$store.state.app.application.sokedId}).then(response => console.log(response.data)).catch(err => console.log(err))
             this.$store.dispatch('app/login', {data: user.data(), id: user.id})
           } finally {

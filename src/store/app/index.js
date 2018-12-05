@@ -4,6 +4,7 @@ import { db } from '../../main'
 
 const state = {
   application: {
+    response: null,
     user: {
       photo: 'https://firebasestorage.googleapis.com/v0/b/toolkit-1556a.appspot.com/o/sin_perfil.png?alt=media&token=58e7bbb1-2233-48c9-a301-0f0a1d2b422a',
       email: '',
@@ -65,28 +66,28 @@ const state = {
     ],
     csv: [
       {
-        'Fecha': '10/02/2018',
-        'Petición': 'por favor me pueden informar cuando es la fecha de cierre convocatoria de los proyectos de investigación',
-        'Respuesta': 'La fecha de cierre es el 5 de diciembre de 2018',
-        'Secretaría o Dependencia': '-'
+        'fecha': '10/02/2018',
+        'peticion': 'por favor me pueden informar cuando es la fecha de cierre convocatoria de los proyectos de investigación',
+        'respuesta': 'La fecha de cierre es el 5 de diciembre de 2018',
+        'dependencia': ''
       },
       {
-        'Fecha': '11/02/2018',
-        'Petición': 'Necesito saber que papeles debo de tener en cuenta para presentar un proyecto de investigación',
-        'Respuesta': 'Se deben presentar los siguientes formatos diligenciados: a. Formato de proyecto de investigación y extensión: F2080 y b. Formato F2081',
-        'Secretaría o Dependencia': '-'
+        'fecha': '11/02/2018',
+        'peticion': 'Necesito saber que papeles debo de tener en cuenta para presentar un proyecto de investigación',
+        'respuesta': 'Se deben presentar los siguientes formatos diligenciados: a. Formato de proyecto de investigación y extensión: F2080 y b. Formato F2081',
+        'dependencia': ''
       },
       {
-        'Fecha': '10/03/2018',
-        'Petición': 'Cuál es la fecha de inicio del proyecto FE-002',
-        'Respuesta': 'La fecha de inicio del proyecto es 3 de junio de 20018',
-        'Secretaría o Dependencia': '-'
+        'fecha': '10/03/2018',
+        'peticion': 'Cuál es la fecha de inicio del proyecto FE-002',
+        'respuesta': 'La fecha de inicio del proyecto es 3 de junio de 20018',
+        'dependencia': ''
       },
       {
-        'Fecha': '10/03/2018',
-        'Petición': 'Quien es el encargado de recepcionar los proyectos de extensión',
-        'Respuesta': 'Maria Perez es la persona encargada de recepcionar los proyectos de extensión',
-        'Secretaría o Dependencia': '-'
+        'fecha': '10/03/2018',
+        'peticion': 'Quien es el encargado de recepcionar los proyectos de extensión',
+        'respuesta': 'Maria Perez es la persona encargada de recepcionar los proyectos de extensión',
+        'dependencia': ''
       }
     ]
   },
@@ -146,6 +147,9 @@ const mutations = {
   },
   carinaToken: (state, token) => {
     state.application.user.carinaToken = token
+  },
+  response: (state, data) => {
+    state.application.response = data.data.keywords.objCsv
   }
 }
 

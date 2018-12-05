@@ -5,13 +5,6 @@
         <div class="headline">Define el Modelo Cognitivo</div>
       </v-flex>
     </v-layout>
-    <!-- <v-layout row wrap>
-      <v-flex column xs12 sm12 md12>
-        <div style="text-align: center">
-          <v-img :src="fondo"></v-img>
-        </div>
-      </v-flex>
-    </v-layout> -->
     <v-layout row wrap>
       <v-flex column xs12 sm12 md12 class="py-3">
         <v-card light hover style="border-color: black">
@@ -36,6 +29,33 @@
           <v-card-actions>
             <v-btn :disabled="enableSaveModel" block outline color="black" @click="sendData">Crear Modelo</v-btn>
           </v-card-actions>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-card light hover style="border-color: black" v-if="this.$store.state.app.application.response">
+          <v-card-title primary-title>
+            <div class="headline">Respuesta</div>
+          </v-card-title>
+          <!-- nombre del modelo -->
+          <v-card-text>
+            <v-expansion-panel>
+              <v-expansion-panel-content
+                v-for="(item, index) in this.$store.state.app.application.response" :key="index">
+                <div slot="header">{{item.peticion}}</div>
+                <v-card>
+                  <v-card-text>
+                    <v-list>
+                      <v-list-tile  @click="" v-for="(word, index) in item.keywords" :key="index">
+                        <v-list-tile-content>
+                          <v-list-tile-title v-text="word"></v-list-tile-title>
+                        </v-list-tile-content>
+                      </v-list-tile>
+                    </v-list>
+                  </v-card-text>
+                </v-card>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -69,7 +89,7 @@ export default {
       let data = {context: this.$store.state.app.contexto, csv: this.$store.state.app.application.csv}
       // console.log(data)
       axios.defaults.headers.common['Authorization'] = this.$store.state.app.application.user.carinaToken
-      axios.post('http://192.168.1.10:3000/c/postCognitiveModel', data).then(response => console.log(response.data)).catch(err => console.log(err))
+      axios.post('http://172.19.0.56:3000/c/postCognitiveModel', data).then(response => console.log(response.data)).catch(err => console.log(err))
     }
   },
   computed: {
