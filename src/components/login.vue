@@ -27,31 +27,17 @@
 
 <script>
 import toolbar from '@/components/toolBar'
-import { db } from '../main'
-import axios from 'axios'
-import io from 'socket.io-client'
+import {db} from '../main'
+// import io from 'socket.io-client'
 
 export default {
   name: 'login',
-  mounted () {
-    this.socket = io('http://172.19.0.56:3000')
-    this.socket.on('clientConnect', (data) => {
-      this.$store.commit('app/asignSocketId', data.idClient)
-      // this.$store.commit('app/carinaToken', data.token)
-    })
-    this.socket.on('user/auth', (data) => {
-      this.$store.commit('app/carinaToken', data.token)
-    })
-    this.socket.on('returnDataWithKeyWords', (data) => {
-      this.$store.commit('app/response', data)
-      console.log(data)
-    })
-  },
+  mounted () {},
   data () {
     return {
       valid: true,
       show: false,
-      socket: null,
+      url: 'http://localhost:3000',
       passwordRules: [v => !!v || 'Contraseña requerida'],
       emailRules: [
         v => !!v || 'E-mail is required',
@@ -66,14 +52,14 @@ export default {
     login () {
       db.collection('users').where('email', '==', this.$store.state.app.application.user.email).where('password', '==', this.$store.state.app.application.user.password).get().then((doc) => {
         if (doc.docs[0]) {
+          // verificar que esto funcione
           let user = doc.docs[0]
           try {
-            axios.post('http://172.19.0.56:3000/user/auth',
-            {idUsuario: this.$store.state.app.application.user.carinaToken, idSocket: this.$store.state.app.application.sokedId}).then(response => console.log(response.data)).catch(err => console.log(err))
             this.$store.dispatch('app/login', {data: user.data(), id: user.id})
           } finally {
             this.$router.push('/')
           }
+          // -----------------------------
         } else {
           console.log('No such document!')
         }

@@ -36,6 +36,7 @@ export default {
       colors
     }
   },
+  methods: {},
   components: { toolbar }
 }
 </script>

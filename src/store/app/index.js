@@ -26,6 +26,7 @@ const state = {
       { icon: 'account_circle', title: 'Perfil', link: '/profile' }
     ],
     usingCM: {
+      response: null,
       steps: {
         C: {
           active: 'accent',
@@ -40,12 +41,9 @@ const state = {
           active: 'disable',
           icon: 'swap_horizontal_circle',
           data: [
-            { icon: 'linear_scale', text: 'Inicio Entrenamiento', active: 'disable', color: 'secondary', shadow: '#FFFD38', to: '/UsingIA/PrepararDatos' },
             { icon: 'personal_video', text: 'Analizar Datos', active: 'disable', color: 'primary', shadow: '#CA0E69', to: '/UsingIA/PrepararDatos' },
             { icon: 'account_circle', text: 'Palabras Relevantes', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/PrepararDatos' },
-            { icon: 'personal_video', text: 'Preguntas', active: 'disable', color: 'primary', shadow: '#CA0E69', to: '/UsingIA/PrepararDatos' },
-            // { icon: 'account_circle', text: 'ProbarE', active: 'disable', color: 'accent' },
-            { icon: 'linear_scale', text: 'Modelo Entrenado', active: 'disable', color: 'secondary', shadow: '#FFFD38', to: '/UsingIA/PrepararDatos' }
+            { icon: 'personal_video', text: 'Preguntas', active: 'disable', color: 'primary', shadow: '#CA0E69', to: '/UsingIA/PrepararDatos' }
           ]
         },
         P: {
@@ -54,15 +52,14 @@ const state = {
           data: [
             { icon: 'account_circle', text: 'Cargar Modelo', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/PrepararDatos' },
             { icon: 'account_circle', text: 'Cargar Datos', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/PrepararDatos' },
-            { icon: 'account_circle', text: 'Iniciar Prueba', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/PrepararDatos' },
-            { icon: 'personal_video', text: 'Resultados', active: 'disable', color: 'primary', shadow: '#CA0E69', to: '/UsingIA/PrepararDatos' }
+            { icon: 'account_circle', text: 'Iniciar Prueba', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/PrepararDatos' }
           ]
         }
       }
     },
     modes: [
-      { text: 'No tienes información y tienes poco tiempo?', textButton: 'DEMO', to: '', img: user },
-      { text: 'Quieres volver a ingresar y seguir probando?', textButton: 'DIY', to: '', img: manager }
+      { text: 'No tienes información y tienes poco tiempo?', textButton: 'DEMO', to: '', img: user, method: this.ejemplo },
+      { text: 'Quieres volver a ingresar y seguir probando?', textButton: 'DIY', to: '', img: manager, method: this.ejemplo }
     ],
     csv: [
       {
@@ -94,17 +91,22 @@ const state = {
   contexto: {
     nombre: '',
     descripcion: '',
-    palabrasClave: []
+    palabrasClave: [],
+    palabrasRelevantes: [],
+    palabrasCandidatas: [],
+    palabrasDescartadas: [],
+    categorias: []
   },
   registro: {
-    fecha: '',
-    hora: '',
-    tipo: '',
+    fecha: '', // no va analisis
+    hora: '', // no va analisis
+    tipo: '', // no va analisis
     solicitud: '',
-    dependencia: '',
+    dependencia: '', // no va analisis
     respuesta: '',
-    observaciones: '',
+    observaciones: '', // no va analisis
     palabrasClave: [],
+    palabrasCandidatas: [],
     palabrasRelevantes: [],
     categorias: []
   },
@@ -156,7 +158,7 @@ const mutations = {
 const actions = {
   auth (context, token) {
     context.state.application.authenticated = true
-    context.state.application.user.carinaToken = token
+    // context.state.application.user.carinaToken = token
     context.state.application.user.token = token
   },
   login (context, user) {

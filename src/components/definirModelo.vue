@@ -24,72 +24,52 @@
             <!-- palabras clave -->
             <v-text-field label="Palabra Clave" @keyup.enter="addPalabraClave" v-model="palabraClave"
             placeholder color="accent" :hint="addedWords" :persistent-hint="perH"></v-text-field>
-            <!-- <v-btn small fab dark color="warning" @click="addPalabraClave"><v-icon dark>add</v-icon></v-btn> -->
           </v-card-text>
-          <v-card-actions>
-            <v-btn :disabled="enableSaveModel" block outline color="black" @click="sendData">Crear Modelo</v-btn>
-          </v-card-actions>
+          <div class="text-xs-center">
+            <v-btn :disabled="enableSaveModel" color="black" class="accent--text" @click="sendData">Crear Modelo</v-btn>
+          </div>
         </v-card>
       </v-flex>
       <v-flex>
-        <v-card light hover style="border-color: black" v-if="this.$store.state.app.application.response">
-          <v-card-title primary-title>
-            <div class="headline">Respuesta</div>
-          </v-card-title>
-          <!-- nombre del modelo -->
-          <v-card-text>
-            <v-expansion-panel>
-              <v-expansion-panel-content
-                v-for="(item, index) in this.$store.state.app.application.response" :key="index">
-                <div slot="header">{{item.peticion}}</div>
-                <v-card>
-                  <v-card-text>
-                    <v-list>
-                      <v-list-tile  @click="" v-for="(word, index) in item.keywords" :key="index">
-                        <v-list-tile-content>
-                          <v-list-tile-title v-text="word"></v-list-tile-title>
-                        </v-list-tile-content>
-                      </v-list-tile>
-                    </v-list>
-                  </v-card-text>
-                </v-card>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-card-text>
-        </v-card>
+        <loading v-if="loading"/>
       </v-flex>
+      <!-- <xampleToolBar/> -->
     </v-layout>
   </v-container>
 
 </template>
 
 <script>
-import fondo from '@/assets/Fondo3.png'
+import loading from '@/components/loading'
 import axios from 'axios'
+import EventBus from '@/components/EventBus'
+import xampleToolBar from '@/components/xampleToolBar'
 
 export default {
   name: 'DefinirModelo',
+  mounted () {
+    EventBus.$on('loading', value => {
+      this.loading = value
+    })
+  },
   data: () => ({
-    fondo,
     palabraClave: '',
-    dir: 'bottom',
+    loading: false,
+    url: 'http://localhost:3000',
     text: 'Ejemplo: Rubro / Palabras agregadas: ',
     perH: false
   }),
   methods: {
-    createModel () {
-      console.log(this.$store.state.app.contexto.nombre)
-    },
     addPalabraClave () {
       this.$store.commit('app/addPalabraClave', this.palabraClave)
       this.palabraClave = ''
       this.perH = true
     },
     sendData () {
+      EventBus.$emit('loading', true)
       let data = {context: this.$store.state.app.contexto, csv: this.$store.state.app.application.csv}
-      // console.log(data)
       axios.defaults.headers.common['Authorization'] = this.$store.state.app.application.user.carinaToken
-      axios.post('http://172.19.0.56:3000/c/postCognitiveModel', data).then(response => console.log(response.data)).catch(err => console.log(err))
+      axios.post(`${this.url}/c/postCognitiveModel`, data).then(response => console.log(response.data)).catch(err => console.log(err))
     }
   },
   computed: {
@@ -107,7 +87,8 @@ export default {
       })
       return this.text + words.slice(0, -2)
     }
-  }
+  },
+  components: { loading, EventBus, xampleToolBar }
 }
 </script>
 

@@ -53,6 +53,7 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+// 'http://172.19.0.56:3000'
 
 const firebaseApp = firebase.initializeApp(config)
 const db = firebaseApp.firestore()

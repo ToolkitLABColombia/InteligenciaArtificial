@@ -1,15 +1,15 @@
 <template>
   <v-app>
-    <v-content height="auto">
+    <!-- <v-content height="auto"> -->
       <router-view/>
-    </v-content>
-    <footerToolkit/>
+    <!-- </v-content> -->
+    <!-- <footerToolkit/> -->
   </v-app>
 </template>
 
 <script>
 import logoToolkit from '@/assets/logoToolkit.svg'
-import footerToolkit from '@/components/footer'
+// import footerToolkit from '@/components/footer'
 import './stylus/main.styl'
 
 export default {
@@ -35,7 +35,7 @@ export default {
       title: 'kit IA'
     }
   },
-  name: 'App',
-  components: { footerToolkit }
+  name: 'App'
+  // components: { footerToolkit }
 }
 </script>
