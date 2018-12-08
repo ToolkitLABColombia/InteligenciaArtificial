@@ -35,6 +35,11 @@ import { storage } from '../main'
 
 export default {
   name: 'profile',
+  mounted () {
+    if (!this.$store.state.app.application.authenticated) {
+      this.$router.push('/login')
+    }
+  },
   data: () => ({
     img: null,
     file: null,

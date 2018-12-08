@@ -11,7 +11,7 @@
 				<v-img :src="banner" aspect-ratio="2.75">
 					<v-expand-transition>
 						<div v-if="hover" class="pa-2 transition-fast-in-fast-out grey darken-3 v-card--reveal white--text" style="height: 100%;">
-							<div style="font-size: 24px; font-weight: bold">{{$store.state.app.application.user.email}}</div>
+							<div style="font-size: 18px; font-weight: bold">{{$store.state.app.application.user.email}}</div>
 							<div style="font-size: 14px; font-weight: bold">{{$store.state.app.application.user.entity}}</div>
 							<div style="font-size: 14px; font-weight: bold">{{$store.state.app.application.user.location}}</div>
 						</div>
@@ -47,15 +47,17 @@
 		<v-card-text>
 			<v-card light hover style="border-color: black">
 				<v-card-text>
-					<v-layout row v-for="(cm, index) in this.$store.state.app.application.user.cms" :key="index">
-						<v-flex xs7 sm7 md7>
-							<v-subheader>{{cm.name}}</v-subheader>
-						</v-flex>
-						<v-flex xs5 sm5 md5>
-							<v-btn small outline color="info">cargar</v-btn>
-							<v-btn small outline color="error" @click="deleteCM()">eliminar</v-btn>
-						</v-flex>
-					</v-layout>
+					<div class="text-xs-center">
+						<v-layout row v-for="(cm, index) in this.$store.state.app.application.currentsCms" :key="index">
+							<v-flex xs7 sm7 md7>
+								<v-subheader>{{cm.name}}</v-subheader>
+							</v-flex>
+							<v-flex xs5 sm5 md5>
+								<!-- <v-btn small outline color="info">cargar</v-btn> -->
+								<v-btn small outline color="error" @click="deleteCM()">eliminar</v-btn>
+							</v-flex>
+						</v-layout>
+					</div>
 				</v-card-text>
 			</v-card>
 		</v-card-text>

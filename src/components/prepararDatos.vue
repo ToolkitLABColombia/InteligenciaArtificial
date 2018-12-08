@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <div class="headline">Prepara tus datos de la siguiente manera</div>
+  <v-container>
+    <h1 class="pb-2" style="font-size: 35px">Prepara tus datos de la siguiente manera</h1>
+    <v-divider></v-divider>
     <div>
-      <v-alert v-model="alert" dismissible type="success"><strong>Recuerda...</strong><br>Tus datos deben estar organizados de la siguiente forma</v-alert>
+      <v-alert v-model="alert" dismissible><strong>Recuerda...</strong><br>Tus datos deben estar organizados de la siguiente forma</v-alert>
     </div>
     <v-img :src="previewData" contain aspect-ratio="3"></v-img>
     <div>
@@ -13,7 +14,7 @@
     <div class="text-xs-center">
       <v-btn color="black" outline to="/UsingIA/DefinirModelo">Siguiente</v-btn>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>

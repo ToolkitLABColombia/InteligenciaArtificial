@@ -28,7 +28,7 @@
 <script>
 import toolbar from '@/components/toolBar'
 import {db} from '../main'
-// import io from 'socket.io-client'
+import EventBus from '@/components/EventBus'
 
 export default {
   name: 'login',
@@ -50,25 +50,26 @@ export default {
       this.$refs.form.reset()
     },
     login () {
+      EventBus.$emit('loading', true)
       db.collection('users').where('email', '==', this.$store.state.app.application.user.email).where('password', '==', this.$store.state.app.application.user.password).get().then((doc) => {
         if (doc.docs[0]) {
-          // verificar que esto funcione
           let user = doc.docs[0]
           try {
             this.$store.dispatch('app/login', {data: user.data(), id: user.id})
           } finally {
+            EventBus.$emit('loading', false)
             this.$router.push('/')
           }
-          // -----------------------------
         } else {
-          console.log('No such document!')
+          let confirmar = confirm('Usuario o contraseña invalido.')
+          if (confirmar) {
+            EventBus.$emit('loading', false)
+          }
         }
-      }).catch((error) => {
-        console.log('Error getting document:', error)
-      })
+      }).catch(error => alert('Error al verificar el usuario:', error))
     }
   },
-  components: { toolbar }
+  components: { toolbar, EventBus }
 }
 </script>
 

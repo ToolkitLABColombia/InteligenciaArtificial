@@ -9,11 +9,12 @@ import Registro from '@/components/registro'
 import Profile from '@/components/profile'
 import PrepararDatos from '@/components/PrepararDatos'
 import DefinirModelo from '@/components/definirModelo'
+import PalabrasClave from '@/components/palabrasClave'
 import steps from '@/components/steps'
 
 Vue.use(Router)
 
-export default new Router({
+const routes = {
   mode: 'history',
   routes: [
     {
@@ -47,8 +48,8 @@ export default new Router({
       component: Profile
     },
     {
-      path: '/demo',
-      name: 'Demo',
+      path: '/steps',
+      name: 'Steps',
       component: steps
     },
     { path: '/UsingIA',
@@ -59,7 +60,13 @@ export default new Router({
       }, {
         path: 'DefinirModelo',
         component: DefinirModelo
+      }, {
+        path: 'palabraClave',
+        name: 'PalabrasClave',
+        component: PalabrasClave
       }]
     }
   ]
-})
+}
+
+export const router = new Router(routes)

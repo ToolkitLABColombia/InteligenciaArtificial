@@ -65,7 +65,7 @@ export default {
       })
     },
     getToken () {
-      if (this.$store.state.app.application.authenticated) {
+      if (this.$store.state.app.application.authenticated !== true) {
         axios.post(`${this.url}/user/auth`, {idUsuario: this.$store.state.app.application.user.carinaToken, idSocket: this.$store.state.app.application.sokedId}).then(response => {
           console.log(response.data)
         }).catch(err => console.log(err))

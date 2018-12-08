@@ -19,6 +19,11 @@ import toolbar from '@/components/toolBar'
 
 export default {
   name: 'steps',
+  mounted () {
+    if (this.$store.state.app.application.mode === 'DIY' && this.$store.state.app.application.authenticated === false) {
+      this.$router.push('/login')
+    }
+  },
   methods: {
     router (rute) {
       this.$router.push(rute)

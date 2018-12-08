@@ -1,10 +1,15 @@
 import user from '../../assets/noun_User.svg'
 import manager from '../../assets/noun_manager.svg'
 import { db } from '../../main'
+import { router } from '../../router'
+import axios from 'axios'
+import EventBus from '@/components/EventBus'
 
 const state = {
   application: {
     response: null,
+    createModel: true,
+    currentCognitiveModel: '',
     user: {
       photo: 'https://firebasestorage.googleapis.com/v0/b/toolkit-1556a.appspot.com/o/sin_perfil.png?alt=media&token=58e7bbb1-2233-48c9-a301-0f0a1d2b422a',
       email: '',
@@ -13,11 +18,9 @@ const state = {
       location: '',
       carinaToken: '',
       token: '',
-      cms: [
-        {name: 'modelo cognitivo ejemplo 1'},
-        {name: 'modelo cognitivo ejemplo 2'}
-      ]
+      cms: []
     },
+    currentsCms: [],
     socketId: '',
     authenticated: false,
     toolBarItems: [
@@ -42,7 +45,7 @@ const state = {
           icon: 'swap_horizontal_circle',
           data: [
             { icon: 'personal_video', text: 'Analizar Datos', active: 'disable', color: 'primary', shadow: '#CA0E69', to: '/UsingIA/PrepararDatos' },
-            { icon: 'account_circle', text: 'Palabras Relevantes', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/PrepararDatos' },
+            { icon: 'account_circle', text: 'Palabras Relevantes', active: 'accent', color: 'accent', shadow: '#35CCCC', to: '/UsingIA/palabraClave' },
             { icon: 'personal_video', text: 'Preguntas', active: 'disable', color: 'primary', shadow: '#CA0E69', to: '/UsingIA/PrepararDatos' }
           ]
         },
@@ -57,9 +60,10 @@ const state = {
         }
       }
     },
+    mode: '',
     modes: [
-      { text: 'No tienes información y tienes poco tiempo?', textButton: 'DEMO', to: '', img: user, method: this.ejemplo },
-      { text: 'Quieres volver a ingresar y seguir probando?', textButton: 'DIY', to: '', img: manager, method: this.ejemplo }
+      { text: 'No tienes información y tienes poco tiempo?', textButton: 'DEMO', img: user },
+      { text: 'Quieres volver a ingresar y seguir probando?', textButton: 'DIY', img: manager }
     ],
     csv: [
       {
@@ -91,9 +95,9 @@ const state = {
   contexto: {
     nombre: '',
     descripcion: '',
-    palabrasClave: [],
+    palabrasClave: ['perro', 'gato', 'conejo', 'libro', 'celular'],
     palabrasRelevantes: [],
-    palabrasCandidatas: [],
+    palabrasCandidatas: ['perro', 'gato', 'conejo', 'libro', 'celular'],
     palabrasDescartadas: [],
     categorias: []
   },
@@ -124,9 +128,7 @@ const state = {
   ]
 }
 
-const getters = {
-  // iconosOds: ({ iconosOds }) => iconosOds
-}
+const getters = {}
 
 const mutations = {
   changeStep: (state, key) => {
@@ -152,13 +154,30 @@ const mutations = {
   },
   response: (state, data) => {
     state.application.response = data.data.keywords.objCsv
+  },
+  addCognitiveModel: (state, CognitiveModel) => {
+    let cognitiveModel = { name: CognitiveModel.data.nombre, id: CognitiveModel.id }
+    state.application.user.cms.push(CognitiveModel.id)
+    state.application.currentsCms.push(cognitiveModel)
+  },
+  mode: (state, mode) => {
+    state.mode = mode
+    console.log(state.mode)
+  },
+  discardWord: (state, obj) => {
+    state.contexto[obj.key2].push(obj.value)
+    let index = state.contexto[obj.key1].indexOf(obj.value)
+    state.contexto[obj.key1].splice(index, 1)
+  },
+  addWord: (state, word) => {
+    state.contexto.palabrasClave.push(word)
+    EventBus.$emit('addWord', false)
   }
 }
 
 const actions = {
   auth (context, token) {
     context.state.application.authenticated = true
-    // context.state.application.user.carinaToken = token
     context.state.application.user.token = token
   },
   login (context, user) {
@@ -172,6 +191,35 @@ const actions = {
         photo: url
       })
     })
+  },
+  addingCognitiveModel (context, link) {
+    db.collection('cognitiveModels').add(context.state.contexto).then(cognitiveModel => {
+      try {
+        db.collection('cognitiveModels').doc(cognitiveModel.id).get().then(CognitiveModel => {
+          context.commit('addCognitiveModel', {id: CognitiveModel.id, data: CognitiveModel.data()})
+          context.state.application.currentCognitiveModel = CognitiveModel.id
+        }).then(e => context.dispatch('updateUser'))
+      } catch (error) {
+        console.error(error)
+      } finally {
+        context.dispatch('procesingCognitiveModel', link)
+      }
+    })
+    .catch(error => console.error('Error al registrar el cognitiveModel: ', error))
+  },
+  procesingCognitiveModel (context, link) {
+    let data = {context: context.state.contexto, csv: context.state.application.csv}
+    axios.defaults.headers.common['Authorization'] = context.state.application.user.carinaToken
+    axios.post(`${link}/c/postCognitiveModel`, data).then(response => console.log(response.data)).catch(err => console.error(err))
+    EventBus.$emit('loading', false)
+    context.state.application.createModel = false
+    router.push('/UsingIA/palabraClave')
+  },
+  updateUser (context) {
+    db.collection('users').doc(context.state.application.user.token).update(context.state.application.user)
+  },
+  updatingCognitiveModel (context) {
+    db.collection('cognitiveModels').doc(context.state.application.currentCognitiveModel).update(context.state.contexto).then(updt => EventBus.$emit('loading', false))
   }
 }
 

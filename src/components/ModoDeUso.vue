@@ -16,7 +16,7 @@
             <router-link to=""><a class="error--text" style="font-style: italic; font-size: 24px">Haz click aqui</a></router-link to="">
           </v-flex>
           <v-flex row>
-            <v-btn block to="/demo" large outline color="black" style="font-size: 28px">{{mode.textButton}}</v-btn>
+            <v-btn block @click="activeMode(mode.textButton)" large outline color="black" style="font-size: 28px">{{mode.textButton}}</v-btn>
           </v-flex>
         </v-flex>
       </v-layout>
@@ -36,7 +36,12 @@ export default {
       colors
     }
   },
-  methods: {},
+  methods: {
+    activeMode (mode) {
+      this.$store.commit('app/mode', mode)
+      this.$router.push('/steps')
+    }
+  },
   components: { toolbar }
 }
 </script>
