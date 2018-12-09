@@ -33,7 +33,7 @@
 			</v-flex>
 		</v-layout>
     <div class="text-xs-center">
-      <v-btn color="black" outline to="/UsingIA/temasDeInteres">Siguiente</v-btn>
+      <v-btn color="black" outline @click="createRelations">Siguiente</v-btn>
     </div>
   </v-container>
 </template>
@@ -56,6 +56,10 @@ export default {
   methods: {
     check (value, key1, key2) {
       this.$store.commit('app/discardWord', { value: value, key1: key1, key2: key2 })
+    },
+    createRelations () {
+      EventBus.$emit('loading', true)
+      this.$store.dispatch('app/createRelations')
     }
   },
   components: { dialogo }

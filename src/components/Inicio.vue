@@ -47,7 +47,7 @@ export default {
       enlace,
       titulo,
       socket: null,
-      url: 'http://localhost:3000'
+      url: 'http://192.168.1.10:3000'
     }
   },
   methods: {
@@ -61,6 +61,11 @@ export default {
       })
       this.socket.on('returnDataWithKeyWords', (data) => {
         this.$store.commit('app/response', data)
+        EventBus.$emit('loading', false)
+      })
+      this.socket.on('relationedWords', (data) => {
+        console.log(data)
+        // this.$store.commit('app/response', data)
         EventBus.$emit('loading', false)
       })
     },

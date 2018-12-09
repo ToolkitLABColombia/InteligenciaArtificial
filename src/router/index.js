@@ -10,6 +10,7 @@ import Profile from '@/components/profile'
 import PrepararDatos from '@/components/PrepararDatos'
 import DefinirModelo from '@/components/definirModelo'
 import PalabrasClave from '@/components/palabrasClave'
+import TemasDeInteres from '@/components/temasDeInteres'
 import steps from '@/components/steps'
 
 Vue.use(Router)
@@ -62,8 +63,10 @@ const routes = {
         component: DefinirModelo
       }, {
         path: 'palabraClave',
-        name: 'PalabrasClave',
         component: PalabrasClave
+      }, {
+        path: 'temasDeInteres',
+        component: TemasDeInteres
       }]
     }
   ]

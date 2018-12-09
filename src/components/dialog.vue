@@ -4,12 +4,11 @@
 			<v-card>
 				<v-card-title class="headline">Agregar Palabra</v-card-title>
 				<v-card-text>
-					<v-text-field label="Palabra a agregar" v-model="word"
+					<v-text-field @keyup.enter="addWordInArray()" label="Palabra a agregar" v-model="word"
 					placeholder color="accent" :persistent-hint="true"></v-text-field>
 				</v-card-text>
 				<v-card-actions>
-					<v-btn color="primary" flat @click="addWordInArray()">Agregar</v-btn>
-					<v-btn color="primary" flat @click="closeDialog()">Cancelar</v-btn>
+					<v-btn color="primary" flat @click="closeDialog()">Cerrar</v-btn>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>

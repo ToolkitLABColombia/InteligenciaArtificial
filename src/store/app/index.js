@@ -95,9 +95,9 @@ const state = {
   contexto: {
     nombre: '',
     descripcion: '',
-    palabrasClave: ['perro', 'gato', 'conejo', 'libro', 'celular'],
+    palabrasClave: [],
     palabrasRelevantes: [],
-    palabrasCandidatas: ['perro', 'gato', 'conejo', 'libro', 'celular'],
+    palabrasCandidatas: [],
     palabrasDescartadas: [],
     categorias: []
   },
@@ -115,17 +115,11 @@ const state = {
     categorias: []
   },
   registros: [],
-  relaciones: [
-    {
-      palabraClave: '',
-      temasDeInteres: [
-        {
-          temaDeInteres: '',
-          palabrasRelevantes: []
-        }
-      ]
-    }
-  ]
+  relaciones: [],
+  temaInteres: {
+    temaDeInteres: '',
+    palabrasRelevantes: []
+  }
 }
 
 const getters = {}
@@ -153,7 +147,8 @@ const mutations = {
     state.application.user.carinaToken = token
   },
   response: (state, data) => {
-    state.application.response = data.data.keywords.objCsv
+    state.contexto = data.context
+    state.application.csv = data.csv
   },
   addCognitiveModel: (state, CognitiveModel) => {
     let cognitiveModel = { name: CognitiveModel.data.nombre, id: CognitiveModel.id }
@@ -171,7 +166,13 @@ const mutations = {
   },
   addWord: (state, word) => {
     state.contexto.palabrasClave.push(word)
-    EventBus.$emit('addWord', false)
+    // EventBus.$emit('addWord', false)
+  },
+  addCategory: (state, obj) => {
+    state.relaciones[obj.child].temasDeInteres.push({ temaDeInteres: obj.word, palabrasRelevantes: [] })
+  },
+  asignWord: (state, obj) => {
+    state.relaciones[obj.child].temasDeInteres[obj.category].palabrasRelevantes.push(obj.word)
   }
 }
 
@@ -220,6 +221,26 @@ const actions = {
   },
   updatingCognitiveModel (context) {
     db.collection('cognitiveModels').doc(context.state.application.currentCognitiveModel).update(context.state.contexto).then(updt => EventBus.$emit('loading', false))
+  },
+  relationedWords (context, link) {
+    axios.defaults.headers.common['Authorization'] = context.state.application.user.carinaToken
+    axios.post(`${link}/c/relationedWords`, context.state.relaciones).then(response => console.log(response.data)).catch(err => console.error(err))
+    EventBus.$emit('loading', false)
+  },
+  createRelations (context) {
+    try {
+      context.state.contexto.palabrasCandidatas.map(word => {
+        let a = {
+          palabraClave: word,
+          temasDeInteres: []
+        }
+        context.state.relaciones.push(a)
+      })
+      console.log(context.state.relaciones)
+    } finally {
+      EventBus.$emit('loading', false)
+      router.push('/UsingIA/temasDeInteres')
+    }
   }
 }
 

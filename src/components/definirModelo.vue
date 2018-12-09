@@ -45,7 +45,7 @@ export default {
   data: () => ({
     palabraClave: '',
     loading: false,
-    url: 'http://localhost:3000',
+    url: 'http://192.168.1.10:3000',
     text: 'Ejemplo: Rubro / Palabras agregadas: ',
     perH: false
   }),

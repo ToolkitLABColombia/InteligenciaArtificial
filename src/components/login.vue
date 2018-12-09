@@ -37,7 +37,7 @@ export default {
     return {
       valid: true,
       show: false,
-      url: 'http://localhost:3000',
+      url: 'http://192.168.1.10:3000',
       passwordRules: [v => !!v || 'Contraseña requerida'],
       emailRules: [
         v => !!v || 'E-mail is required',
